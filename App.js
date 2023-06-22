@@ -7,6 +7,20 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import IconButton from '@mui/material/IconButton';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Route,Routes, Link, BrowserRouter as Router, NavLink, useNavigate} from 'react-router-dom';
+import InfoIcon from '@mui/icons-material/Info';
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+ 
+ 
+import MenuIcon from '@mui/icons-material/Menu';
+ 
+
  
 const Initial_Movie_List = [{
 
@@ -89,9 +103,61 @@ const Initial_Movie_List = [{
   
   }
   ];
-function App() {
+
+  function App(){
+    const Navigate = useNavigate();
+    return(
+      <div>
+          <Routes>
+            <Route path ="/" element={<Welcome/>} />
+            <Route path ="/movie" element={<AddMovie/>} />
+            <Route path="/colorbox" element={<ColorBox/>} />
+            <Route path="*" element={<Notfound/>} />
+            <Route path="/colorgame" element={<Navigate replace to = "/colorbox" />} />
+          </Routes>
+          <li> 
+        <NavLink to="/"> Home </NavLink>
+          </li>
+            <li> 
+        <NavLink to="/colorbox"> colorbox app </NavLink>
+          </li>
+            <li>
+        <NavLink to="/movie"> Movie App </NavLink>
+
+
+        <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+          >
+            
+          </IconButton>
+          
+          <li>
+          <NavLink to="/"> Home </NavLink><br/></li>
+          <li>
+          <NavLink to="/colorbox"> colorbox app </NavLink><br/> </li>
+          <li>
+          <NavLink to="/movie"> Movie App </NavLink></li>
+        </Toolbar>
+      </AppBar>
+    </Box>
+      </li>
+         
+        
+      </div>
+    )
+  }
+
+
+function AddMovie() {
   
- 
+  
     //  add movie form
     const[poster,setPoster] = useState("");
     const[name,setName] = useState("");
@@ -132,7 +198,8 @@ function App() {
             rating:  rating,
             summary: summary
             }
-            setMovieList([...movieList,newMovie])
+            setMovieList([...movieList,newMovie]);
+             
 
         }}>Submit</Button>
         
@@ -149,7 +216,13 @@ function App() {
   );
 }
 
-
+function Welcome(){
+  return(
+    <div>
+      <h1>Welcome,Click any one of the below</h1>
+    </div>
+  )
+}
 
 
 // movie ui
@@ -172,7 +245,7 @@ function Movie({movie}){
     display: show ? "block" : "none",
   } 
   let styles={color: movie.rating >8 ?"green" : "red"};
-  
+  const navigate = useNavigate();
   return(
     <div className="movie-container">
       <img className="movie-poster"src={movie.poster} alt= {movie.name}/>
@@ -183,9 +256,26 @@ function Movie({movie}){
       </div>
       <hr></hr>
       {/* <p>{"the value of show is" + show }</p>  */}
-      <button onClick={() => setShow(!show)}  >  <ExpandLessIcon/> </button>
-      <p className="movie-summary" style={summaryStyles}>{movie.summary}</p>
+      {/* <button onClick={() => setShow(!show)}  >  <ExpandLessIcon/> </button> */}
+      <IconButton aria-label="expandless" color="primary" onClick={() => setShow(!show)} >
+      {/* <ExpandLessIcon/>  */}
+      {show ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+      </IconButton>
+
+
+      <IconButton aria-label="delete" color="primary" onClick={() => navigate("/colorbox") }>
+      < InfoIcon />  
+</IconButton>
+
+
+      {/* conditional styling */}
+      {/* <p className="movie-summary" style={summaryStyles}>{movie.summary}</p> */}
       
+
+      {/* conditional rendering  where the content itself is removed from dom*/ } 
+      {show ? <p  className="movie-summary">{movie.summary}</p> : ""}
+
+
       <Counter />
    
     </div>
@@ -194,9 +284,15 @@ function Movie({movie}){
 
 // difference between visibility:hidden and display:none
 
-
  
-
+function Notfound(){
+  return(
+    <div>
+     
+      <img src='https://freefrontend.com/assets/img/tailwind-404-page-templates/404-page-not-found.png' width="100%"></img>
+    </div>
+  )
+}
  
 
  
